@@ -1,0 +1,42 @@
+@import './color';
+
+.news-card {
+    margin: 2px;
+
+    .v-responsive__content {
+        flex: auto;
+    }
+
+    .news-title {
+        color: $text-title;
+        font-size: 16px;
+        word-break: break-word;  
+        width: 100%;
+    }
+
+    .news-img {
+        height: 310px;
+    }
+
+    .v-card__actions {
+        position: absolute ;
+        bottom: 0;
+    }
+
+    .v-list-item__title {
+        color: $text-title;
+    }
+    
+    .news-avatar {
+        padding: 0px;
+        margin-right: 0 !important;
+    }
+
+    .news-source {
+        font-size: 14px;
+    }
+
+    .news-avatar-img {
+        width: 30px;
+    }
+}

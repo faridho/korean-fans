@@ -1,0 +1,49 @@
+@import "./color";
+
+.dialog-auth {
+    .header {
+        padding-top: 30px;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+
+    .desc {
+        padding-bottom: 30px;
+        text-align: center;
+        word-break: break-word;  
+    }
+
+    .close {
+        padding: 4px;
+        position: absolute;
+        top: 0px;
+        right: 4px;
+    }
+
+    .dialog-button {
+        text-align: center;
+        .sign {
+            width: 220px;
+            text-transform: none !important;
+            margin-bottom: 8px;
+            text-align: left;
+
+            .icon {
+                width: 20%;
+                float: left;
+                padding: 4px;
+                text-align: center;
+            }
+
+            .text {
+                width: 80%;
+                float: right;
+                padding: 4px;
+            }
+        }
+    }
+}
+
+.dialog-footer {
+    padding-top: 20px;
+}

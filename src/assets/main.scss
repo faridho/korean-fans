@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Manrope:700&display=swap');
+@import './components/color';
+@import './components/toolbar';
+@import './components/headlines';
+@import './components/articles';
+@import './components/streaks';
+@import './components/footer';
+@import './components/dialog';
+@import './components/breadcrumbs';
+@import './components/create';
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+}
+
+a {
+    color: $black-thin !important;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+

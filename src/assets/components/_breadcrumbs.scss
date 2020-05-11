@@ -1,0 +1,9 @@
+@import "./color";
+
+.breadcrumbs {
+    padding-left: 0px !important;
+
+    .v-application ul {
+        padding-left: 0px;
+    }
+}

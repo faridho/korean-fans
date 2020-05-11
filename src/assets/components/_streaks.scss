@@ -1,0 +1,35 @@
+@import './color';
+
+.streak {
+    margin-left: 40px;
+    .streak-header {
+        padding-left: 14px;
+
+        .streak-title {
+            font-weight: bold !important;
+            margin-bottom: 0px !important;
+        }
+    }
+
+    .streak-subheader {
+        align-items: unset !important;
+        height: 0 !important;
+        padding-bottom: 14px !important;
+    }
+}
+
+/* Portrait and Landscape */
+@media screen and (max-width: 834px) {
+    .streak {
+        margin-left: 0px;
+        margin-top: 20px;
+        .streak-header {
+            padding-left: 0px;
+        }
+
+        .streak-list {
+            margin-left: -12px;
+        }
+    }
+}
+

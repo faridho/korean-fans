@@ -1,0 +1,38 @@
+@import './color';
+
+.article-title {
+    font-weight: bold !important;
+    margin-bottom: 0px !important;
+}
+.list-title {
+    padding-top: 0px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-bottom: 16px !important;
+}
+
+.articles-card {
+    margin-top: 14px;
+
+    .articles-title {
+        font-size: 16px !important;
+        word-break: break-word;  
+        line-height: 1.2em;
+    }
+
+    .articles-card-action {
+        position: absolute;
+        top: 70px !important;
+        width: 83% !important;
+    }
+
+    .articles-avatar {
+        padding: 0px;
+        margin-right: 0 !important;
+    }
+
+    .articles-source {
+        font-size: 14px;
+    }
+}
+

@@ -6,4 +6,13 @@
     .v-application ul {
         padding-left: 0px;
     }
+
+    a {
+        color: $black-thin !important;
+        text-decoration: none;
+    }
+    
+    a:hover {
+        text-decoration: underline;
+    }
 }

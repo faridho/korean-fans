@@ -8,17 +8,10 @@
 @import './components/dialog';
 @import './components/breadcrumbs';
 @import './components/create';
+@import './components/details';
+@import './components/profile';
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
-}
-
-a {
-    color: $black-thin !important;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
 }
 

@@ -2,7 +2,9 @@
   <div>
     <div class="float-left">
       <p class="title article-title">{{ mainTitle }}</p>
-      <a href class="grey--text">View all 540 articles</a>
+      <span class="article-more">
+        <a href class="grey--text">View all 540 articles</a>
+      </span>
     </div>
     <div class="float-right">
       <v-btn rounded small color="indigo" dark @click="create">{{ buttonTitle }}</v-btn>
@@ -18,7 +20,12 @@
           <div>
             <v-card-title
               class="articles-title list-title"
-            >{{ article.title }}</v-card-title>
+            >
+            <router-link
+              :to="{ name: 'Detail', params:{ id: article.id} }"
+            >
+            {{ article.title }}
+            </router-link></v-card-title>
             <v-card-subtitle>{{ article.desc }}</v-card-subtitle>
             <v-card-actions class="articles-card-action">
               <v-list-item-avatar class="articles-avatar">
@@ -30,7 +37,11 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title class="articles-source">
-                  {{ article.reporter }}
+                  <router-link 
+                    :to="{name: 'Profile', params: {username: 'faridho'}}"
+                  >
+                    {{ article.reporter }}
+                  </router-link>
                   <span class="grey--text ml-1">{{ article.created }}</span>
                 </v-list-item-title>
               </v-list-item-content>

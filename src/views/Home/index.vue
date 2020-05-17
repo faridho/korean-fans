@@ -18,7 +18,7 @@ import Headline from "./components/Headline"
 import Content from "./components/Content"
 import Footer from "./components/Footer"
 import Tag from "./components/Tag"
-import Account from '@/components/Account'
+import Account from '@/components/TheAccount'
 
 export default {
   data: () => ({

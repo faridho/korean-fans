@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import Breadcrumbs from "@/components/Breadcrumbs";
-import Account from "@/components/Account";
+import Breadcrumbs from "@/components/TheBreadcrumbs";
+import Account from "@/components/TheAccount";
 import { breadcrumbsline } from "@/views/config";
 import Editor from "./components/Editor";
 import Properties from "./components/Properties";

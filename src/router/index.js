@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home'
 import Create from '@/views/Create'
+import Detail from '@/views/Detail'
+import Profile from '@/views/Profile'
+import Settings from '@/views/Settings'
 
 Vue.use(VueRouter)
 
@@ -15,6 +18,21 @@ Vue.use(VueRouter)
     path: '/create',
     name: 'Create',
     component: Create
+  },
+  {
+    path: '/detail/:id',
+    name: 'Detail',
+    component: Detail
+  },
+  {
+    path: '/profile/:username',
+    name: 'Profile',
+    component: Profile
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   }
 ]
 

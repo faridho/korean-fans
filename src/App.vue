@@ -6,7 +6,7 @@
 </template>
 <script>
 import '@/assets/main.scss'
-import Header from '@/components/Header'
+import Header from '@/components/TheHeader'
 export default {
   data: () => ({
 

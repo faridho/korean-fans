@@ -45,9 +45,7 @@
                   <v-list>
                     <v-list-item>
                       <v-list-item-title>
-                        <router-link 
-                          :to="{ name: 'Settings'}"
-                        >
+                        <router-link :to="{ name: 'Settings'}">
                           <span class="mdi mdi-cogs mdi-18px"></span>
                           Settings
                         </router-link>
@@ -90,11 +88,11 @@
           <v-card-text>
             <div class="desc">{{ dialogContent.desc }}</div>
             <div class="dialog-button">
-              <v-btn class="sign" small outlined>
+              <v-btn class="sign" small outlined @click="authGoogleFirebase">
                 <span class="mdi mdi-google mdi-18px icon"></span>
                 <span class="text">{{ dialogContent.googleBtn }}</span>
               </v-btn>
-              <v-btn class="sign" small outlined>
+              <v-btn class="sign" small outlined @click="authFacebookFirebase">
                 <span class="mdi mdi-facebook mdi-18px icon"></span>
                 <span class="text">{{ dialogContent.facebookBtn }}</span>
               </v-btn>
@@ -107,9 +105,12 @@
   </div>
 </template>
 <script>
+import * as firebase from "firebase/app";
+import "firebase/auth";
+
 export default {
   data: () => ({
-    status: true,
+    status: false,
     dialog: false,
     dialogContent: {
       header: "",
@@ -118,7 +119,17 @@ export default {
       facebookBtn: ""
     },
     menu: false,
-    rating: 3
+    rating: 3,
+    firebaseConfig: {
+      apiKey: "AIzaSyCGDDOc2SGmiORikIAkPQfR_CyC72fXJh8",
+      authDomain: "faridho-s-project.firebaseapp.com",
+      databaseURL: "https://faridho-s-project.firebaseio.com",
+      projectId: "faridho-s-project",
+      storageBucket: "faridho-s-project.appspot.com",
+      messagingSenderId: "938482721225",
+      appId: "1:938482721225:web:c211d5b1ec1d7567c04818",
+      measurementId: "G-PQEPFQ70WN"
+    }
   }),
 
   methods: {
@@ -151,6 +162,72 @@ export default {
 
     close() {
       this.dialog = false;
+    },
+
+    authGoogleFirebase() {
+      //configuration
+      try {
+        firebase.initializeApp(this.firebaseConfig);
+      } catch (err) {
+        if (!/already exists/.test(err.message)) {
+          console.error("Firebase initialization error raised", err.stack);
+        }
+      }
+
+      //instance
+      var provider = new firebase.auth.GoogleAuthProvider();
+    
+      //To sign in with a pop-up window,
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function(result) {
+          const user = {
+            name: result.user.displayName,
+            email: result.user.email,
+            photoUrl: result.user.photoURL,
+            emailVerified: result.user.emailVerified,
+            uid: result.user.uid
+          };
+          console.log(user);
+        })
+        .catch(function(error) {
+          var errorMessage = error.message;
+          console.log(errorMessage);
+        });
+    },
+
+    authFacebookFirebase() {
+      //configuration
+      try {
+        firebase.initializeApp(this.firebaseConfig);
+      } catch (err) {
+        if (!/already exists/.test(err.message)) {
+          console.error("Firebase initialization error raised", err.stack);
+        }
+      }
+
+      //instance
+      var provider = new firebase.auth.FacebookAuthProvider();
+      
+      //To sign in with a pop-up window,
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function(result) {
+          const user = {
+            name: result.user.displayName,
+            email: result.user.email,
+            photoUrl: result.user.photoURL,
+            emailVerified: result.user.emailVerified,
+            uid: result.user.uid
+          };
+          console.log(user);
+        })
+        .catch(function(error) {
+          var errorMessage = error.message;
+          console.log(errorMessage)
+        });
     }
   }
 };

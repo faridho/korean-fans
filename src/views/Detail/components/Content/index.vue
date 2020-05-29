@@ -2,7 +2,7 @@
   <v-container>
     <v-row no-gutters>
       <v-col cols="8" md="8" sm="12">
-        <Article />
+        <Article :article="article"/>
       </v-col>
       <v-col cols="4" md="4" sm="12">
         <Comment />
@@ -14,6 +14,10 @@
 import Article from "./components/Article"
 import Comment from "./components/Comment"
 export default {
+  props: {
+    article: Object
+  },
+
   data: () => ({
 
   }),

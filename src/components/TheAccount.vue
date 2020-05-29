@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading :active.sync="isLoading" :is-full-page="fullPage" :color="color"></loading>
     <template v-if="user.loggedIn">
       <div class="float-right">
         <div class="auth-bar-section">
@@ -9,7 +10,7 @@
                 <template v-slot:activator="{ on }">
                   <div class="profile-bar" v-on="on">
                     <v-avatar size="28px" class="mr-1">
-                      <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+                      <img :src="user.data.photoUrl" alt="John" />
                     </v-avatar>
                     {{ user.data.displayName }}
                     <span class="mdi mdi-menu-down"></span>
@@ -20,14 +21,14 @@
                   <v-list>
                     <v-list-item>
                       <v-list-item-avatar>
-                        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+                        <img :src="user.data.photoUrl" alt="John" />
                       </v-list-item-avatar>
 
                       <v-list-item-content>
                         <v-list-item-title>
                           <router-link
-                            :to="{ name: 'Profile', params: {username: 'faridho'}}"
-                          >Faridho</router-link>
+                            :to="{ name: 'Profile', params: {username: user.data.uid}}"
+                          >{{ user.data.displayName }}</router-link>
                         </v-list-item-title>
                         <v-list-item-subtitle>
                           <v-rating
@@ -108,6 +109,8 @@
 <script>
 import * as firebase from "firebase/app";
 import { mapGetters } from "vuex";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   data: () => ({
@@ -120,7 +123,12 @@ export default {
       facebookBtn: ""
     },
     menu: false,
-    rating: 3
+    rating: 3,
+
+    //loading
+    isLoading: false,
+    fullPage: true,
+    color: "#576574"
   }),
 
   computed: {
@@ -161,67 +169,91 @@ export default {
       this.dialog = false;
     },
 
-    authGoogleFirebase() {
-      //instance
-      var provider = new firebase.auth.GoogleAuthProvider();
+    async authentcationFirebase(provider) {
+      const db = firebase.firestore();
 
       //To sign in with a pop-up window,
-      firebase
+      const getPayload = await firebase
         .auth()
         .signInWithPopup(provider)
-        .then(function(result) {
+        .then(result => {
           const user = {
             name: result.user.displayName,
             email: result.user.email,
             photoUrl: result.user.photoURL,
             emailVerified: result.user.emailVerified,
-            uid: result.user.uid
+            uid: result.user.uid,
+            status: 0,
+            bio: null,
+            createdDate: Date.now()
           };
-          console.log(user);
-          location.reload();
+          return user;
         })
-        .catch(function(error) {
+        .catch(error => {
           var errorMessage = error.message;
-          alert(errorMessage);
+          console.log(errorMessage);
         });
+
+      const uid = new Promise(resolve => {
+        db.collection("koreanUsers")
+          .where("uid", "==", getPayload.uid)
+          .get()
+          .then(querySnapshot => {
+            if (querySnapshot.empty) {
+              resolve(querySnapshot.empty);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      });
+
+      uid.then(val => {
+        if (val) {
+          db.collection("koreanUsers")
+            .add(getPayload)
+            .then(docRef => {
+              console.log(docRef);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+      });
+    },
+
+    authGoogleFirebase() {
+      this.isLoading = true;
+      //instance
+      const provider = new firebase.auth.GoogleAuthProvider();
+      this.authentcationFirebase(provider);
+      this.isLoading = false;
     },
 
     authFacebookFirebase() {
+      this.isLoading = true;
       //instance
-      var provider = new firebase.auth.FacebookAuthProvider();
-
-      //To sign in with a pop-up window,
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(function(result) {
-          const user = {
-            name: result.user.displayName,
-            email: result.user.email,
-            photoUrl: result.user.photoURL,
-            emailVerified: result.user.emailVerified,
-            uid: result.user.uid
-          };
-          console.log(user);
-          location.reload();
-        })
-        .catch(function(error) {
-          var errorMessage = error.message;
-          alert(errorMessage);
-        });
+      const provider = new firebase.auth.FacebookAuthProvider();
+      this.authentcationFirebase(provider);
+      this.isLoading = false;
     },
 
     logOut() {
+      this.isLoading = true;
       firebase
         .auth()
         .signOut()
-        .then(function() {
-          location.reload();
-        })
+        .then(function() {})
         .catch(function(error) {
           alert(error);
         });
+      this.dialog = false;
+      this.isLoading = false;
     }
+  },
+
+  components: {
+    Loading
   }
 };
 </script>

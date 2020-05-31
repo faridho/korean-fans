@@ -85,7 +85,7 @@
 
           <v-list two-line subheader>
             <v-list-item class="float-right">
-              <v-btn color="indigo" rounded small dark @click="publishContenClicked">Publish</v-btn>
+              <v-btn color="indigo" :loading="publishLoading" rounded small dark @click="publishContenClicked">Publish</v-btn>
             </v-list-item>
           </v-list>
         </v-card>
@@ -125,7 +125,9 @@ export default {
       selectedTags: [],
       selectedCategories: [],
       thumbnail: []
-    }
+    },
+
+    publishLoading: false
   }),
 
   computed: {
@@ -141,6 +143,7 @@ export default {
     },
 
     async publishContenClicked() {
+      this.publishLoading = true
       const file = this.form.thumbnail;
       const newFileName = uuidv4();
       const metadata = {
@@ -180,11 +183,12 @@ export default {
           const payload = {
             categories: this.form.selectedCategories,
             contentText: this.form.contentText,
-            createdById: this.user.data.uid,
+            createdById: this.user.data.userId,
             tags: this.form.selectedTags,
             thumbnail:
               "https://firebasestorage.googleapis.com/v0/b/faridho-s-project.appspot.com/o/thumbnails%2F591951e6-c58f-4846-bee4-b4ae7979b0b6?alt=media&token=0ecdaf86-302f-45be-b007-36c172fb4667",
-            title: this.form.title
+            title: this.form.title,
+            postedDate: Date.now()
           };
 
           const docId = await db.collection("koreanArticles")
@@ -197,6 +201,7 @@ export default {
             });
 
             if (docId) {
+              this.publishLoading = false
               this.$router.push({ path: `/detail/${docId}`})
             }
             

@@ -27,7 +27,7 @@
                       <v-list-item-content>
                         <v-list-item-title>
                           <router-link
-                            :to="{ name: 'Profile', params: {username: user.data.uid}}"
+                            :to="{ name: 'Profile', params: {username: user.data.userId}}"
                           >{{ user.data.displayName }}</router-link>
                         </v-list-item-title>
                         <v-list-item-subtitle>
@@ -185,7 +185,7 @@ export default {
             uid: result.user.uid,
             status: 0,
             bio: null,
-            createdDate: Date.now()
+            registerDate: Date.now()
           };
           return user;
         })

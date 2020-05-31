@@ -3,7 +3,7 @@
     <v-container>
       <v-row no-gutters>
         <v-col cols="12" md="12" sm="12" xs="12">
-          <Breadcrumbs :breadcrumbs="newBreadcrumbs" /> 
+          <Breadcrumbs :breadcrumbs="newBreadcrumbs" />
           <Account />
         </v-col>
       </v-row>
@@ -23,25 +23,42 @@ export default {
     paramsId: vm.$route.params.id,
     breadcrumbs: breadcrumbsline.detail,
     newBreadcrumbs: [],
-    article: {}
+    article: {},
+    comments: []
   }),
 
   created() {
-    this.loadData();
+    this.loadArticles();
   },
 
   methods: {
-    async loadData() {
+    async loadArticles() {
       const db = firebase.firestore();
       const docRef = db.collection("koreanArticles").doc(this.paramsId);
 
       const dataFromCollection = await docRef
         .get()
-        .then(function(doc) {
+        .then(doc => {
           if (doc.exists) {
-            return doc.data();
+            const article = doc.data();
+            const userId = doc.data().createdById;
+
+            const user = new Promise(resolve => {
+              const docRef = db.collection("koreanUsers").doc(userId);
+              docRef.get().then(doc => {
+                if (doc.exists) {
+                  resolve(doc.data());
+                }
+              });
+            });
+
+            const loadedArticle = user.then(userData => {
+              return Object.assign(article, userData);
+            });
+           
+            return loadedArticle;
           } else {
-            return {}
+            return {};
           }
         })
         .catch(function(error) {
@@ -56,7 +73,7 @@ export default {
       ];
 
       this.newBreadcrumbs = this.breadcrumbs.concat(breadcrumbsActive);
-      this.article = dataFromCollection
+      this.article = dataFromCollection;
     }
   },
 

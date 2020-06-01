@@ -5,6 +5,7 @@ import Create from '@/views/Create'
 import Detail from '@/views/Detail'
 import Profile from '@/views/Profile'
 import Settings from '@/views/Settings'
+import Update from '@/views/Update'
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,11 @@ Vue.use(VueRouter)
     component: Create
   },
   {
+    path: '/update/:id',
+    name: 'Update',
+    component: Update
+  },
+  {
     path: '/detail/:id',
     name: 'Detail',
     component: Detail
@@ -30,7 +36,7 @@ Vue.use(VueRouter)
     component: Profile
   },
   {
-    path: '/settings',
+    path: '/settings/:username',
     name: 'Settings',
     component: Settings
   }

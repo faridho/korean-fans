@@ -47,7 +47,7 @@
                   <v-list>
                     <v-list-item>
                       <v-list-item-title>
-                        <router-link :to="{ name: 'Settings'}">
+                        <router-link :to="{ name: 'Settings', params: { username: user.data.userId }}">
                           <span class="mdi mdi-cogs mdi-18px"></span>
                           Settings
                         </router-link>

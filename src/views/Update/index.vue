@@ -32,10 +32,12 @@
               <v-file-input
                 v-model="form.thumbnail"
                 accept="image/*"
-                placeholder="Pick a picture"
+                placeholder="Chage a picture"
                 prepend-icon="mdi-camera"
               ></v-file-input>
             </v-list-item>
+
+            <v-img :src="form.imageUrl"></v-img>
           </v-list>
 
           <v-list subheader flat>
@@ -87,12 +89,12 @@
             <v-list-item class="float-right">
               <v-btn
                 color="indigo"
-                :loading="publishLoading"
+                :loading="updateLoading"
                 rounded
                 small
                 dark
-                @click="publishContenClicked"
-              >Publish</v-btn>
+                @click="updateContenClicked"
+              >Update</v-btn>
             </v-list-item>
           </v-list>
         </v-card>
@@ -112,8 +114,9 @@ import { v4 as uuidv4 } from "uuid";
 import { mapGetters } from "vuex";
 
 export default {
-  data: () => ({
-    breadcrumbs: breadcrumbsline.create,
+  data: vm => ({
+    paramsId: vm.$route.params.id,
+    breadcrumbs: breadcrumbsline.update,
 
     //editor
     editor: BalloonEditor,
@@ -131,10 +134,11 @@ export default {
       contentText: "",
       selectedTags: [],
       selectedCategories: [],
-      thumbnail: []
+      thumbnail: [],
+      imageUrl: ""
     },
 
-    publishLoading: false
+    updateLoading: false
   }),
 
   computed: {
@@ -143,77 +147,80 @@ export default {
     })
   },
 
+  created() {
+    this.getArticle();
+  },
+
   methods: {
+    async getArticle() {
+      const db = firebase.firestore();
+      const article = new Promise(resolve => {
+        const docRef = db.collection("koreanArticles").doc(this.paramsId);
+        docRef.get().then(doc => {
+          if (doc.exists) {
+            resolve(doc.data());
+          }
+        });
+      });
+
+      article.then(data => {
+        (this.form.title = data.title),
+          (this.form.contentText = data.contentText),
+          (this.form.selectedTags = data.tags),
+          (this.form.selectedCategories = data.categories),
+          (this.form.imageUrl = data.thumbnail);
+      });
+    },
+
     remove(item) {
       this.form.selectedTags.splice(this.form.selectedTags.indexOf(item), 1);
       this.form.selectedTags = [...this.form.selectedTags];
     },
 
-    async publishContenClicked() {
-      this.publishLoading = true;
-      const file = this.form.thumbnail;
-      const newFileName = uuidv4();
-      const metadata = {
-        contentType: "image/jpeg"
-      };
-      const storage = firebase.storage();
-      const storageRef = storage.ref();
+    async updateContenClicked() {
+      this.updateLoading = true;
+
       const db = firebase.firestore();
+      const file = this.form.thumbnail;
+      console.log(this.form.thumbnail)
+      
+      let imageUrl;
+      if (file.name) {
+        const newFileName = uuidv4();
+        const metadata = {
+          contentType: "image/jpeg"
+        };
+        const storage = firebase.storage();
+        const storageRef = storage.ref();
 
-      try {
-        const putImage = storageRef
-          .child(`thumbnails/${newFileName}`)
-          .put(file, metadata);
+        storageRef.child(`thumbnails/${newFileName}`).put(file, metadata);
+        imageUrl = this.form.imageUrl;
+      } else {
+        imageUrl = this.form.imageUrl;
+      }
 
-        putImage.on(
-          "state_changed",
-          snapshot => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-            switch (snapshot.state) {
-              case firebase.storage.TaskState.PAUSED:
-                console.log("Upload is paused");
-                break;
-              case firebase.storage.TaskState.RUNNING:
-                console.log("Upload is running");
-                break;
-            }
-          },
-          error => {
-            console.log(error);
-          },
-          () => {
-            putImage.snapshot.ref.getDownloadURL().then(async downloadURL => {
-              const payload = {
-                categories: this.form.selectedCategories,
-                contentText: this.form.contentText,
-                createdById: this.user.data.userId,
-                tags: this.form.selectedTags,
-                thumbnail: downloadURL,
-                title: this.form.title,
-                postedDate: Date.now()
-              };
+      const payload = {
+        categories: this.form.selectedCategories,
+        contentText: this.form.contentText,
+        tags: this.form.selectedTags,
+        thumbnail: imageUrl,
+        title: this.form.title,
+      }
 
-              const docId = await db
-                .collection("koreanArticles")
-                .add(payload)
-                .then(docRef => {
-                  return docRef.id;
-                })
-                .catch(function(error) {
-                  alert(error);
-                });
+      const docRef = db.collection("koreanArticles").doc(this.paramsId);
 
-              if (docId) {
-                this.publishLoading = false;
-                this.$router.push({ path: `/detail/${docId}` });
-              }
-            });
-          }
-        );
-      } catch (error) {
-        alert(error);
+      const result = docRef
+        .update(payload)
+        .then(function() {
+          console.log("Document successfully updated!");
+        })
+        .catch(function(error) {
+          console.error("Error updating document: ", error);
+        });
+
+      if (result) {
+        this.updateLoading = false
+        this.$router.push({ path: `/detail/${this.paramsId}`})
       }
     }
   },

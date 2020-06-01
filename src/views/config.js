@@ -25,5 +25,39 @@ export const breadcrumbsline = {
             disabled: false,
             href: '/'
         }
-    ]
+    ],
+
+    'settings': [
+        {
+            text: 'Home',
+            disabled: false,
+            href: '/'
+        },
+        {
+            text: 'Profile',
+            disabled: false,
+            href: '/'
+        },
+        {
+            text: 'Settings',
+            disabled: true
+        }
+    ],
+
+    'update': [
+        {
+            text: 'Home',
+            disabled: false,
+            href: '/'
+        },
+        {
+            text: 'Profile',
+            disabled: false,
+            href: '/'
+        },
+        {
+            text: 'Update Post',
+            disabled: true
+        }
+    ],
 }

@@ -30,8 +30,8 @@
             flat
             hide-details
             hide-selected
-            item-text="name"
-            item-value="symbol"
+            item-text="title"
+            item-value="id"
             label="What is your favourite korean about?"
             solo-inverted
           >
@@ -51,22 +51,17 @@
                 class="white--text"
                 v-on="on"
               >
-                <v-icon left>mdi-coin</v-icon>
-                <span v-text="item.name"></span>
+                <span v-text="item.title"></span>
               </v-chip>
             </template>
             <template v-slot:item="{ item }">
               <v-list-item-avatar
                 color="indigo"
                 class="headline font-weight-light white--text"
-              >{{ item.name.charAt(0) }}</v-list-item-avatar>
+              >{{ item.title.charAt(0) }}</v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-list-item-subtitle v-text="item.symbol"></v-list-item-subtitle>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item-content>
-              <v-list-item-action>
-                <v-icon>mdi-coin</v-icon>
-              </v-list-item-action>
             </template>
           </v-autocomplete>
         </v-col>
@@ -75,6 +70,7 @@
   </v-toolbar>
 </template>
 <script>
+import * as firebase from "firebase/app";
 export default {
   data: () => ({
     isLoading: false,
@@ -83,19 +79,30 @@ export default {
   }),
 
   watch: {
-    search() {
+    async search() {
       if (this.items.length > 0) return;
       this.isLoading = true;
 
-      fetch("https://api.coingecko.com/api/v3/coins/list")
-        .then(res => res.clone().json())
-        .then(res => {
-          this.items = res;
+      const db = firebase.firestore();
+      const articles = await db
+        .collection("koreanArticles")
+        .get()
+        .then(querySnapshot => {
+          let articles = [];
+          querySnapshot.forEach(doc => {
+            articles.push({
+              id: doc.id,
+              title: doc.data().title
+            });
+          });
+          return articles;
         })
-        .catch(err => {
-          console.log(err);
-        })
-        .finally(() => (this.isLoading = false));
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+
+      this.items = articles;
+      this.isLoading = false;
     }
   }
 };

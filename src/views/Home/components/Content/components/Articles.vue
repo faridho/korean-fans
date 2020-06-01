@@ -7,7 +7,7 @@
       </span>
     </div>
     <div class="float-right">
-      <v-btn rounded small color="indigo" dark @click="create">{{ buttonTitle }}</v-btn>
+      <v-btn v-if="user.loggedIn" rounded small color="indigo" dark @click="create">{{ buttonTitle }}</v-btn>
     </div>
     <div class="float-left">
       <v-card class="articles-card" flat v-for="(article, index) in articles" :key="index">
@@ -38,16 +38,16 @@
               <v-list-item-content>
                 <v-list-item-title class="articles-source">
                   <router-link 
-                    :to="{name: 'Profile', params: {username: 'faridho'}}"
+                    :to="{name: 'Profile', params: {username: article.userId }}"
                   >
-                    {{ article.reporter }}
+                    {{ article.by }}
                   </router-link>
                   <span class="grey--text ml-1">{{ article.created }}</span>
                 </v-list-item-title>
               </v-list-item-content>
               <v-spacer></v-spacer>
               <v-btn icon>
-                <v-icon>mdi-bookmark</v-icon>
+                <span class="mdi mdi-bookmark-outline mdi-24px"></span>
               </v-btn>
             </v-card-actions>
           </div>
@@ -57,15 +57,81 @@
   </div>
 </template>
 <script>
-import { articles } from './content/articles'
+import * as firebase from "firebase/app";
+import { mapGetters } from "vuex";
+
 export default {
   data: () => ({
     mainTitle: "Articles & Discussions",
     buttonTitle: "Create New Post",
-    articles: articles
+    articles: []
   }),
 
+  computed: {
+    ...mapGetters({
+      user: "user"
+    })
+  },
+
+  created() {
+    this.getArticles();
+  },
+
   methods: {
+    async getArticles() {
+      const db = firebase.firestore();
+      const articles = await db
+        .collection("koreanArticles")
+        .orderBy("postedDate", "desc")
+        .get()
+        .then(querySnapshot => {
+          let articles = [];
+          querySnapshot.forEach(doc => {
+            articles.push({
+              id: doc.id,
+              createdById: doc.data().createdById,
+              thumbnail: doc.data().thumbnail,
+              title: doc.data().title,
+              contentTex: doc.data().contentText.substr(0, 80),
+              postedDate: doc.data().postedDate
+            });
+          });
+          return articles;
+        })
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+
+      let dataArticles = [];
+      for (const article of articles) {
+        const userId = article.createdById;
+
+        const user = new Promise(resolve => {
+          const docRef = db.collection("koreanUsers").doc(userId);
+          docRef.get().then(doc => {
+            if (doc.exists) {
+              resolve(doc.data());
+            }
+          });
+        });
+
+        user.then(userData => {
+          dataArticles.push({
+            userId: article.createdById,
+            by: userData.name,
+            avatar: userData.photoUrl,
+            id: article.id,
+            thumbnail: article.thumbnail,
+            title: article.title,
+            text: article.contentTex,
+            created: article.postedDate
+          });
+        });
+      }
+
+      this.articles = dataArticles;
+    },
+
     create() {
       this.$router.push({ path:'/create' })
     }

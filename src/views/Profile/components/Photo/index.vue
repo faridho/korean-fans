@@ -16,8 +16,8 @@
       ></v-rating>
       <div>{{ profile.bio }}</div>
     </v-card-text>
-    <v-card-actions class="text-center follow-action pb-10" v-if="user.data.userId === paramsId">
-      <v-btn color="indigo" outlined dark small>
+    <v-card-actions class="text-center follow-action pb-10" v-if="user.loggedIn">
+      <v-btn color="indigo" outlined dark small @click="goToSettings()" v-if="user.data.userId === paramsId">
         <span class="mdi mdi-pencil mdi-18px" left></span>
         Edit Profile
       </v-btn>
@@ -41,6 +41,12 @@ export default {
     ...mapGetters({
       user: "user"
     })
+  },
+
+  methods: {
+    goToSettings() {
+      this.$router.push({ name: 'Settings', params: { username: this.user.data.userId }})
+    }
   }
 };
 </script>

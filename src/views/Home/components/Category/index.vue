@@ -3,15 +3,13 @@
     <div class="float-left">
       <v-sheet class="mx-auto tags" light>
         <v-slide-group multiple show-arrows>
-          <v-slide-item v-for="n in 10" :key="n" v-slot:default="{ active, toggle }">
+          <v-slide-item v-for="(category, index) in categories" :key="index">
             <v-btn
               class="mx-2"
-              :input-value="active"
-              active-class="purple white--text"
+              color="grey darken-3 white--text"
               depressed
-              rounded
               @click="toggle"
-            >#TAG {{ n }}</v-btn>
+            >#{{ category }}</v-btn>
           </v-slide-item>
         </v-slide-group>
       </v-sheet>
@@ -19,5 +17,9 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data: () => ({
+    categories: ["Food", "K-Pop", "K-Drama", "Travel", "Culture"]
+  })
+};
 </script>

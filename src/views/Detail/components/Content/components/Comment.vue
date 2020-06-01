@@ -34,7 +34,8 @@
 
           <v-list-item-content class="content">
             <v-list-item-title class="comment-source">
-              <router-link v-if="comment.commentByUserId"
+              <router-link
+                v-if="comment.commentByUserId"
                 :to="{name: 'Profile', params: {username: comment.commentByUserId }}"
               >{{ comment.commentBy }}</router-link>
             </v-list-item-title>
@@ -49,7 +50,8 @@
 
           <v-list-item-content class="content">
             <v-list-item-title class="comment-source">
-              <router-link v-if="comment.commentByUserId"
+              <router-link
+                v-if="comment.commentByUserId"
                 :to="{name: 'Profile', params: {username: comment.commentByUserId }}"
               >{{ comment.commentBy }}</router-link>
             </v-list-item-title>

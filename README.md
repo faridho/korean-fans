@@ -1,5 +1,11 @@
 # korean-fans
 
+🇰🇷 Korean Fans is a user generated content platform for big fans of K[Drama, POP, Food, Culture]. Integrate with Full Firebase.
+
+# Screnshoot
+
+![alt_text](screenshot/kf.png)
+
 ## Project setup
 ```
 npm install
@@ -14,11 +20,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

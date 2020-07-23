@@ -4,7 +4,7 @@
 
 # Screnshoot
 
-![alt_text](screenshot/kf.png)
+![alt_text](screenshoot/kf.png)
 
 ## Project setup
 ```

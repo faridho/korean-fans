@@ -6,7 +6,7 @@
 
 ![alt_text](screenshoot/kf.png)
 
-## Project Setup
+## Project setup
 ```
 npm install
 ```

@@ -1,6 +1,6 @@
 # Korean Fans
 
-🇰🇷 Korean Fans is a user generated content platform for big fans of K[Drama, POP, Food, Culture]. Integrate with Full Firebase.
+🇰🇷 Korean Fans is a user generated content platform for big fans of K[Drama, POP, Food, Culture]. Integrate with Full Firebase
 
 # Screnshoot
 

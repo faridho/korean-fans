@@ -1,22 +1,29 @@
 # Korean Fans
 
-🇰🇷 Korean Fans is a user generated content platform for big fans of K[Drama, POP, Food, Culture]. Integrate with Full Firebase
+🇰🇷 Korean Fans is a user generated content platform for big fans of K[Drama, POP, Food, Culture]. Integrate with Full Firebase like:
+
+1. Authentication
+2. Cloud Firestore
+3. Cloud Storage
 
 # Screnshoot
 
 ![alt_text](screenshoot/kf.png)
 
-## Project setup
+## Installation
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+## Run On Development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+## Run To Build
 ```
 npm run build
 ```
+
+
+
